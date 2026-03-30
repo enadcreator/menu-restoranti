@@ -151,11 +151,40 @@
   .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);letter-spacing:.2em;font-weight:300;text-transform:uppercase;margin-bottom:.5rem}
   footer p{font-size:.65rem;letter-spacing:.2em;color:var(--text-muted);margin-top:.3rem}
 
+  /* ── CUSTOMER INFO MODAL ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);padding:1rem}
+  .modal-overlay.open{opacity:1;pointer-events:all}
+  .modal-box{background:#fff;width:100%;max-width:460px;transform:translateY(30px);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow:hidden}
+  .modal-overlay.open .modal-box{transform:translateY(0)}
+  .modal-head{background:var(--dark);padding:1.4rem 1.8rem;display:flex;align-items:center;justify-content:space-between}
+  .modal-head h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--gold);letter-spacing:.08em}
+  .modal-close{background:none;border:none;cursor:pointer;color:var(--cream);font-size:1.3rem;transition:color .2s}
+  .modal-close:hover{color:var(--gold)}
+  .modal-body{padding:1.8rem}
+  .modal-body p.modal-sub{font-size:.68rem;color:var(--text-muted);letter-spacing:.08em;line-height:1.7;margin-bottom:1.4rem;border-left:2px solid var(--gold);padding-left:.8rem}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+  .form-row.single{grid-template-columns:1fr}
+  .form-group{display:flex;flex-direction:column;gap:.35rem}
+  .form-group label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);font-weight:600}
+  .form-group label span.req{color:#e53935;margin-left:2px}
+  .form-group input,.form-group select,.form-group textarea{border:1px solid rgba(61,43,31,.18);padding:.6rem .8rem;font-family:'Montserrat',sans-serif;font-size:.75rem;color:var(--dark);outline:none;transition:border-color .2s;background:#fff;width:100%}
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold)}
+  .form-group input.error,.form-group select.error{border-color:#e53935}
+  .form-group .err-msg{font-size:.58rem;color:#e53935;display:none}
+  .form-group.has-error .err-msg{display:block}
+  .form-group.has-error input,.form-group.has-error select{border-color:#e53935}
+  .modal-footer{padding:0 1.8rem 1.8rem;display:flex;flex-direction:column;gap:.6rem}
+  .modal-confirm-btn{width:100%;padding:1rem;background:#25D366;border:none;cursor:pointer;color:#fff;font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:.7rem;transition:all .3s}
+  .modal-confirm-btn:hover{background:#1ebe5d;transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,211,102,.35)}
+  .modal-back-btn{width:100%;padding:.6rem;background:none;border:1px solid rgba(61,43,31,.2);cursor:pointer;color:var(--text-muted);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;font-family:'Montserrat',sans-serif;transition:all .2s}
+  .modal-back-btn:hover{border-color:var(--brown);color:var(--brown)}
+
   @media(max-width:768px){
     nav{padding:1rem 1.2rem}
     .nav-links{display:none}
     .menu-panel.active{grid-template-columns:1fr}
     .cart-sidebar{width:100vw}
+    .form-row{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -190,8 +219,8 @@
   <div class="plate-ring"></div>
   <div class="plate-ring"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow" data-i18n="hero_eyebrow">Menu create by Enad Digital Creator</p>
-    <h1 class="hero-title"><em>Emri</em><br>Restorantit</h1>
+    <p class="hero-eyebrow" data-i18n="hero_eyebrow">Est. 2024 · Fine Dining</p>
+    <h1 class="hero-title">Your <em>Business</em><br>Name</h1>
     <div class="hero-divider"><span></span><i>✦</i><span></span></div>
     <p class="hero-subtitle" data-i18n="hero_subtitle">Where Every Dish Tells a Story</p>
     <a href="#menu" class="btn-gold"><span data-i18n="hero_cta">Explore Our Menu</span></a>
@@ -524,8 +553,8 @@
 
 <!-- ══ FOOTER ══ -->
 <footer>
-  <div class="footer-logo">Emri restorantit</div>
-  <p data-i18n="footer_sub">Pranojme porosi ne whatsapp</p>
+  <div class="footer-logo">Your Business Name</div>
+  <p data-i18n="footer_sub">Fine Dining · Order via WhatsApp</p>
   <p style="margin-top:.8rem;">© 2024 Your Business Name.</p>
 </footer>
 
@@ -548,7 +577,7 @@
       <label data-i18n="note_label">Note for your order (optional)</label>
       <textarea id="orderNote" data-i18n-placeholder="note_ph" placeholder="e.g. no onions, allergies, table number..."></textarea>
     </div>
-    <button class="whatsapp-btn" onclick="sendToWhatsApp()">
+    <button class="whatsapp-btn" onclick="openModal()">
       <svg width="22" height="22" viewBox="0 0 32 32" fill="white" style="flex-shrink:0"><path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.668 4.61 1.832 6.505L4 29l7.697-1.817A12.94 12.94 0 0016 28c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22a10.94 10.94 0 01-5.587-1.535l-.4-.238-4.567 1.078 1.1-4.458-.262-.418A10.94 10.94 0 015 15c0-6.065 4.935-11 11-11s11 4.935 11 11-4.935 11-11 11zm6.03-8.14c-.33-.165-1.953-.964-2.256-1.073-.303-.11-.524-.165-.744.165-.22.33-.854 1.073-1.047 1.293-.193.22-.385.248-.715.083-.33-.165-1.394-.514-2.655-1.638-.981-.875-1.643-1.957-1.836-2.287-.193-.33-.02-.508.145-.672.15-.148.33-.385.495-.578.165-.193.22-.33.33-.55.11-.22.055-.413-.028-.578-.083-.165-.744-1.793-1.02-2.455-.269-.645-.541-.557-.744-.568l-.633-.01c-.22 0-.578.083-.88.413-.303.33-1.155 1.128-1.155 2.75s1.183 3.19 1.347 3.41c.165.22 2.328 3.556 5.644 4.988.789.34 1.405.543 1.885.695.792.252 1.512.216 2.082.131.635-.095 1.953-.799 2.228-1.57.275-.772.275-1.434.193-1.572-.083-.138-.303-.22-.633-.385z"/></svg>
       <span data-i18n="wa_btn">Send Order on WhatsApp</span>
     </button>
@@ -556,16 +585,72 @@
   </div>
 </div>
 
-<!-- ══ FLOATING BUBBLE ══ -->
+<!-- ══ CUSTOMER INFO MODAL ══ -->
+<div class="modal-overlay" id="customerModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modalTitle">📋 Your Details</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-sub" id="modalSub">Please fill in your contact details so we can confirm and deliver your order.</p>
+      <div class="form-row">
+        <div class="form-group" id="fg-name">
+          <label id="lbl-name">Full Name <span class="req">*</span></label>
+          <input type="text" id="custName" autocomplete="name"/>
+          <span class="err-msg" id="err-name">Required field</span>
+        </div>
+        <div class="form-group" id="fg-phone">
+          <label id="lbl-phone">Phone Number <span class="req">*</span></label>
+          <input type="tel" id="custPhone" autocomplete="tel" placeholder="+355 6X XXX XXXX"/>
+          <span class="err-msg" id="err-phone">Required field</span>
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group" id="fg-address">
+          <label id="lbl-address">Delivery Address <span class="req">*</span></label>
+          <input type="text" id="custAddress" autocomplete="street-address" placeholder="Street, City"/>
+          <span class="err-msg" id="err-address">Required field</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label id="lbl-type">Order Type</label>
+          <select id="custType">
+            <option value="delivery" id="opt-delivery">🛵 Delivery</option>
+            <option value="pickup"   id="opt-pickup">🏃 Pickup</option>
+            <option value="table"    id="opt-table">🍽️ Table</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label id="lbl-time">Preferred Time</label>
+          <input type="time" id="custTime"/>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-confirm-btn" onclick="confirmAndSend()">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="white" style="flex-shrink:0"><path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.668 4.61 1.832 6.505L4 29l7.697-1.817A12.94 12.94 0 0016 28c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22a10.94 10.94 0 01-5.587-1.535l-.4-.238-4.567 1.078 1.1-4.458-.262-.418A10.94 10.94 0 015 15c0-6.065 4.935-11 11-11s11 4.935 11 11-4.935 11-11 11zm6.03-8.14c-.33-.165-1.953-.964-2.256-1.073-.303-.11-.524-.165-.744.165-.22.33-.854 1.073-1.047 1.293-.193.22-.385.248-.715.083-.33-.165-1.394-.514-2.655-1.638-.981-.875-1.643-1.957-1.836-2.287-.193-.33-.02-.508.145-.672.15-.148.33-.385.495-.578.165-.193.22-.33.33-.55.11-.22.055-.413-.028-.578-.083-.165-.744-1.793-1.02-2.455-.269-.645-.541-.557-.744-.568l-.633-.01c-.22 0-.578.083-.88.413-.303.33-1.155 1.128-1.155 2.75s1.183 3.19 1.347 3.41c.165.22 2.328 3.556 5.644 4.988.789.34 1.405.543 1.885.695.792.252 1.512.216 2.082.131.635-.095 1.953-.799 2.228-1.57.275-.772.275-1.434.193-1.572-.083-.138-.303-.22-.633-.385z"/></svg>
+        <span id="modalSendBtn">Confirm & Send on WhatsApp</span>
+      </button>
+      <button class="modal-back-btn" onclick="closeModal()" id="modalBackBtn">← Back to Cart</button>
+    </div>
+  </div>
+</div>
+
+
 <button class="cart-bubble hidden" id="cartBubble" onclick="openCart()">
   <span class="bubble-icon">🛒</span>
   <span class="bubble-count" id="bubbleCount">0</span>
 </button>
 
 <script>
-
+// ══════════════════════════════════════════════════
+//  ⚡ VENDOS NUMRIN TËND TU WHATSAPP
+//  Shembull: 355691234567  (pa + dhe pa hapësira)
+// ══════════════════════════════════════════════════
 const WHATSAPP_NUMBER = '355692880785';
-
+// ══════════════════════════════════════════════════
 
 // ── TRANSLATIONS ──────────────────────────────────
 const T = {
@@ -625,15 +710,27 @@ const T = {
     clear_btn:'🗑 Clear Cart',
     footer_sub:'Fine Dining · Order via WhatsApp',
     confirm_clear:'Remove all items from cart?',
-    wa_header:'🍽️ *NEW ORDER — Emri Restorantit*',
+    wa_header:'🍽️ *NEW ORDER — Your Business Name*',
     wa_note:'📝 *Note:*',
     wa_total:'💰 *TOTAL:',
     wa_footer:'✅ Please confirm our order. Thank you! 🙏',
     wa_qty:'pcs',
+    // modal
+    modal_title:'📋 Your Details',
+    modal_sub:'Please fill in your contact details so we can confirm and deliver your order.',
+    lbl_name:'Full Name', lbl_phone:'Phone Number', lbl_address:'Delivery Address',
+    lbl_type:'Order Type', lbl_time:'Preferred Time',
+    opt_delivery:'🛵 Delivery', opt_pickup:'🏃 Pickup', opt_table:'🍽️ Table',
+    err_required:'Required field',
+    modal_send:'Confirm & Send on WhatsApp',
+    modal_back:'← Back to Cart',
+    wa_client:'👤 *CLIENT DETAILS*',
+    wa_cname:'Name:', wa_cphone:'Phone:', wa_caddress:'Address:',
+    wa_ctype:'Order type:', wa_ctime:'Preferred time:',
   },
   sq: {
     nav_home:'Kreu', nav_menu:'Menuja', nav_order:'Porosia',
-    hero_eyebrow:'Menu e krijuar nga Enad digitl Creator',
+    hero_eyebrow:'Est. 2024 · Fine Dining',
     hero_subtitle:'Ku Çdo Pjatë Tregon një Histori',
     hero_cta:'Shiko Menunë',
     scroll:'Poshtë',
@@ -681,8 +778,8 @@ const T = {
     cart_title:'🛒 Porosia Juaj',
     cart_empty:'Shporta juaj është bosh.<br>Zgjidhni produktet nga menuja.',
     total_label:'Totali',
-    note_label:'Shënim për porosinë',
-    note_ph:'Shenoni nr e Tavolines, ose nr e telefonin nese porosia eshte delivery',
+    note_label:'Shënim për porosinë (opsional)',
+    note_ph:'p.sh. pa qepë, alergjira, tavolina nr...',
     wa_btn:'Dërgo Porosinë në WhatsApp',
     clear_btn:'🗑 Fshi të gjitha',
     footer_sub:'Fine Dining · Porositni në WhatsApp',
@@ -692,6 +789,18 @@ const T = {
     wa_total:'💰 *TOTALI:',
     wa_footer:'✅ Ju lutem konfirmoni porosinë. Faleminderit! 🙏',
     wa_qty:'copë',
+    // modal
+    modal_title:'📋 Të Dhënat Tuaja',
+    modal_sub:'Ju lutemi plotësoni të dhënat tuaja që të mund ta konfirmojmë dhe dorëzojmë porosinë.',
+    lbl_name:'Emri i Plotë', lbl_phone:'Numri i Telefonit', lbl_address:'Adresa e Dorëzimit',
+    lbl_type:'Lloji i Porosisë', lbl_time:'Ora e Preferuar',
+    opt_delivery:'🛵 Dorëzim', opt_pickup:'🏃 Marrje', opt_table:'🍽️ Tavolinë',
+    err_required:'Fusha e detyrueshme',
+    modal_send:'Konfirmo & Dërgo në WhatsApp',
+    modal_back:'← Kthehu te Shporta',
+    wa_client:'👤 *TË DHËNAT E KLIENTIT*',
+    wa_cname:'Emri:', wa_cphone:'Telefoni:', wa_caddress:'Adresa:',
+    wa_ctype:'Lloji:', wa_ctime:'Ora e preferuar:',
   }
 };
 
@@ -722,6 +831,23 @@ function setLang(l) {
 
   // Update cart header
   document.getElementById('cartTitle').textContent = T[l].cart_title;
+
+  // Update modal labels
+  document.getElementById('modalTitle').textContent   = T[l].modal_title;
+  document.getElementById('modalSub').textContent     = T[l].modal_sub;
+  document.getElementById('lbl-name').innerHTML       = T[l].lbl_name    + ' <span class="req">*</span>';
+  document.getElementById('lbl-phone').innerHTML      = T[l].lbl_phone   + ' <span class="req">*</span>';
+  document.getElementById('lbl-address').innerHTML    = T[l].lbl_address + ' <span class="req">*</span>';
+  document.getElementById('lbl-type').textContent     = T[l].lbl_type;
+  document.getElementById('lbl-time').textContent     = T[l].lbl_time;
+  document.getElementById('opt-delivery').textContent = T[l].opt_delivery;
+  document.getElementById('opt-pickup').textContent   = T[l].opt_pickup;
+  document.getElementById('opt-table').textContent    = T[l].opt_table;
+  document.getElementById('err-name').textContent     = T[l].err_required;
+  document.getElementById('err-phone').textContent    = T[l].err_required;
+  document.getElementById('err-address').textContent  = T[l].err_required;
+  document.getElementById('modalSendBtn').textContent = T[l].modal_send;
+  document.getElementById('modalBackBtn').textContent = T[l].modal_back;
 
   // Refresh cart (empty msg or items)
   updateCartUI();
@@ -835,18 +961,66 @@ function closeCart() {
   document.body.style.overflow = '';
 }
 
-// ── WHATSAPP ───────────────────────────────────────
-function sendToWhatsApp() {
-  if (!cart.length) return;
-  const t     = T[lang];
+// ── MODAL OPEN / CLOSE ─────────────────────────────
+function openModal() {
+  // clear previous errors
+  ['fg-name','fg-phone','fg-address'].forEach(id => {
+    document.getElementById(id).classList.remove('has-error');
+  });
+  closeCart();
+  document.getElementById('customerModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('customerModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── VALIDATE & SEND ────────────────────────────────
+function confirmAndSend() {
+  const t       = T[lang];
+  const name    = document.getElementById('custName').value.trim();
+  const phone   = document.getElementById('custPhone').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+  const type    = document.getElementById('custType').value;
+  const time    = document.getElementById('custTime').value;
+
+  // Validate required fields
+  let valid = true;
+  if (!name)    { document.getElementById('fg-name').classList.add('has-error');    valid = false; }
+  else            document.getElementById('fg-name').classList.remove('has-error');
+  if (!phone)   { document.getElementById('fg-phone').classList.add('has-error');   valid = false; }
+  else            document.getElementById('fg-phone').classList.remove('has-error');
+  if (!address) { document.getElementById('fg-address').classList.add('has-error'); valid = false; }
+  else            document.getElementById('fg-address').classList.remove('has-error');
+
+  if (!valid) return;
+
+  // Build order type label
+  const typeLabel = type === 'delivery' ? t.opt_delivery :
+                    type === 'pickup'   ? t.opt_pickup   : t.opt_table;
+
+  // Build WhatsApp message
   const note  = document.getElementById('orderNote').value.trim();
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
   let msg = t.wa_header + '\n';
   msg += '━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+
+  // Client details block
+  msg += t.wa_client + '\n';
+  msg += `${t.wa_cname} ${name}\n`;
+  msg += `${t.wa_cphone} ${phone}\n`;
+  msg += `${t.wa_caddress} ${address}\n`;
+  msg += `${t.wa_ctype} ${typeLabel}\n`;
+  if (time) msg += `${t.wa_ctime} ${time}\n`;
+  msg += '\n';
+
+  // Items
+  msg += '━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
   cart.forEach(item => {
-    const name = lang === 'sq' ? item.nameSq : item.nameEn;
-    msg += `${item.icon} *${name}*\n`;
+    const name2 = lang === 'sq' ? item.nameSq : item.nameEn;
+    msg += `${item.icon} *${name2}*\n`;
     msg += `   ${item.qty} ${t.wa_qty}  ×  $${item.price.toFixed(2)}  =  *$${(item.price*item.qty).toFixed(2)}*\n\n`;
   });
   msg += '━━━━━━━━━━━━━━━━━━━━━━━━\n';
@@ -855,6 +1029,7 @@ function sendToWhatsApp() {
   msg += '\n\n' + t.wa_footer;
 
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  closeModal();
 }
 
 // Init
